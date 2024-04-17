@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply transition-colors duration-300 ease-linear;
+}
+
+.wh-full {
+  @apply h-full w-full;
+}
