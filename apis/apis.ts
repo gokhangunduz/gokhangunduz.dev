@@ -2,13 +2,13 @@
 
 import axios from "axios";
 import { TIPInfo } from "@/types/types";
-import { IP_TOKEN } from "@/constants/env";
+import { NEXT_PUBLIC_IP_TOKEN } from "@/constants/env";
 
 export async function getIPInfo(): Promise<TIPInfo | undefined> {
   try {
     const { data: publicIP } = await axios.get<string>(`https://ipinfo.io/ip`, {
       params: {
-        token: IP_TOKEN,
+        token: NEXT_PUBLIC_IP_TOKEN,
       },
     });
 
@@ -18,7 +18,7 @@ export async function getIPInfo(): Promise<TIPInfo | undefined> {
       `https://ipinfo.io/${publicIP}`,
       {
         params: {
-          token: IP_TOKEN,
+          token: NEXT_PUBLIC_IP_TOKEN,
         },
       },
     );
