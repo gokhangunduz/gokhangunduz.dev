@@ -1,1 +1,1 @@
-export const IP_TOKEN: string = process.env.IP_TOKEN!;
+export const NEXT_PUBLIC_IP_TOKEN: string = process.env.NEXT_PUBLIC_IP_TOKEN!;
