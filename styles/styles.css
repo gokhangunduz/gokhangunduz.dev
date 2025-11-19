@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  @apply bg-black;
+}
+
+.terminal {
+  @apply w-dvw h-dvh overflow-hidden;
+}
