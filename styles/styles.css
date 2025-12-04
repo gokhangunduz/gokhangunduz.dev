@@ -5,9 +5,15 @@
 }
 
 * {
-  @apply bg-black;
+  @apply bg-black select-none;
 }
 
 .terminal {
-  @apply w-dvw h-dvh overflow-hidden;
+  @apply w-dvw h-dvh px-3 py-1 overflow-hidden;
+}
+
+.xterm-viewport,
+.xterm-screen {
+  user-select: none;
+  -webkit-user-select: none;
 }

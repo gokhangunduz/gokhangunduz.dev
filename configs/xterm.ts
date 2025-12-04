@@ -6,6 +6,8 @@ export const config: ITerminalOptions & ITerminalInitOnlyOptions = {
     background: "#000000",
     foreground: "#FFFFFF",
   },
+  rightClickSelectsWord: false,
+  cursorInactiveStyle: "none",
 };
 
 export const prompt: string = "gokhangunduz@gg: ";

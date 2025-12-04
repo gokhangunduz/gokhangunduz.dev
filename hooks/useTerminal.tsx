@@ -12,6 +12,21 @@ export const useTerminal = () => {
   useEffect(() => {
     const term = new Xterm(config);
 
+    term.attachCustomKeyEventHandler((event) => {
+      if (event.type === "keydown") {
+        const blockedKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+
+        if (
+          blockedKeys.includes(event.key) ||
+          blockedKeys.includes(event.code)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
     const initTerminal = async () => {
       const { FitAddon } = await import("@xterm/addon-fit");
       const { WebLinksAddon } = await import("@xterm/addon-web-links");
@@ -32,8 +47,11 @@ export const useTerminal = () => {
     term.write(welcomeMessage);
     term.write(prompt);
 
+    const handleRightClick = (e: MouseEvent) => e.preventDefault();
     const handleResize = () => fitAddonRef.current?.fit();
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("contextmenu", handleRightClick);
 
     term.onData(async (data) => {
       if (data === "\r") {
@@ -63,6 +81,7 @@ export const useTerminal = () => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("contextmenu", handleRightClick);
       term.dispose();
     };
   }, []);
