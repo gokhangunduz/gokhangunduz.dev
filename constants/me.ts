@@ -51,7 +51,7 @@ const me: IMeData = {
     },
     {
       company: "CERS Digital Agency",
-      title: "Frontend & WordPress Developer",
+      title: "Full Stack Developer",
       date: "May 2021 - Nov 2021",
     },
     {
