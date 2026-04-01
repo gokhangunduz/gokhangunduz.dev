@@ -5,7 +5,11 @@ import packageJSON from "@/package.json";
 
 const commands = {
   whoami: (term) => {
-    term.write(JSON.stringify(me, null, 2).replace(/\n/g, "\r\n") + "\r\n");
+    try {
+      term.write(JSON.stringify(me, null, 2).replace(/\n/g, "\r\n") + "\r\n");
+    } catch {
+      term.write("Could not display user information.\r\n");
+    }
   },
 
   whatsmyip: async (term) => {

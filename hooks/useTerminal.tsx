@@ -73,7 +73,7 @@ export const useTerminal = () => {
           inputBuffer.current = inputBuffer.current.slice(0, -1);
           term.write("\b \b");
         }
-      } else {
+      } else if (inputBuffer.current.length < 2048) {
         inputBuffer.current += data;
         term.write(data);
       }

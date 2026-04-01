@@ -1,4 +1,6 @@
-const me = {
+import { IMeData } from "@/types/types";
+
+const me: IMeData = {
   firstName: "Gökhan",
   lastName: "Gündüz",
   title: "Frontend Developer",
@@ -54,7 +56,7 @@ const me = {
     {
       company: "Ones Technology",
       title: "Frontend Developer (Internship)",
-      date: "Jun 2019 - Agu 2019",
+      date: "Jun 2019 - Aug 2019",
     },
   ],
 
