@@ -5,11 +5,17 @@
 }
 
 * {
-  background-color: #1a1b2e;
+  background-color: #090f14;
 }
 
 .terminal {
   @apply w-dvw h-dvh px-3 py-1 overflow-hidden;
+}
+
+@media (max-width: 639px) {
+  .terminal {
+    @apply px-1 py-0;
+  }
 }
 
 .xterm-viewport,

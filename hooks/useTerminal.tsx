@@ -8,9 +8,11 @@ export const useTerminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputBuffer = useRef<string>("");
   const fitAddonRef = useRef<FitAddon | null>(null);
+  const elCleanupRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    const term = new Xterm(config);
+    const fontSize = window.innerWidth < 640 ? 12 : 14;
+    const term = new Xterm({ ...config, fontSize });
 
     term.attachCustomKeyEventHandler((event) => {
       if (event.type === "keydown") {
@@ -35,10 +37,33 @@ export const useTerminal = () => {
       term.loadAddon(fitAddon);
       term.loadAddon(new WebLinksAddon());
 
-      if (terminalRef.current) {
-        term.open(terminalRef.current);
+      const el = terminalRef.current;
+      if (el) {
+        term.open(el);
         fitAddon.fit();
         fitAddonRef.current = fitAddon;
+        term.focus();
+
+        let touchStartY = 0;
+        const handleClick = () => term.focus();
+        const handleTouchStart = (e: TouchEvent) => {
+          touchStartY = e.touches[0].clientY;
+        };
+        const handleTouchMove = (e: TouchEvent) => {
+          const delta = touchStartY - e.touches[0].clientY;
+          touchStartY = e.touches[0].clientY;
+          term.scrollLines(Math.round(delta / 20));
+        };
+
+        el.addEventListener("click", handleClick);
+        el.addEventListener("touchstart", handleTouchStart, { passive: true });
+        el.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+        elCleanupRef.current = () => {
+          el.removeEventListener("click", handleClick);
+          el.removeEventListener("touchstart", handleTouchStart);
+          el.removeEventListener("touchmove", handleTouchMove);
+        };
       }
     };
 
@@ -82,6 +107,7 @@ export const useTerminal = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("contextmenu", handleRightClick);
+      elCleanupRef.current?.();
       term.dispose();
     };
   }, []);
