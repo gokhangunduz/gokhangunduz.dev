@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
+/* Theme palette — keep in sync with constants/palette.ts */
+:root {
+  --bg: #090f14;
+  --accent: #7ae4ff;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
 
 * {
-  background-color: #090f14;
+  background-color: var(--bg);
 }
 
 .terminal {
