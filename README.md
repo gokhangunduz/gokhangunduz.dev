@@ -1,54 +1,72 @@
-# Terminal-like Website
+# gokhangunduz.dev
 
-This repository is resume website. It is designed with a terminal-like interface and provides users with information through various commands.
+An interactive terminal-style portfolio and resume website. Built with Next.js and xterm.js — explore my background, skills, projects, and more by typing commands directly in the browser.
 
-## Live/Demo Website
+**Live:** [gokhangunduz.dev](https://gokhangunduz.dev)
 
-You can visit the live website at: [gokhangunduz.dev](https://gokhangunduz.dev)
+---
 
-## Technologies Used
+## Commands
 
-- **Next.js**: Built using the React-based Next.js framework.
-- **React.js**: Used for creating the user interface components.
-- **Tailwind CSS**: Utilized for fast and utility-first styling.
-- **Xterm.js**: Provides the interactive terminal-like experience on the website.
+| Command | Description |
+|---|---|
+| `whoami` | Full profile as JSON |
+| `skills` | List of technical skills |
+| `experience` | Work history |
+| `education` | Education background |
+| `projects` | Projects with links |
+| `socials` | Social media links |
+| `contact` | Contact information |
+| `whatsmyip` | Your current IP address and location |
+| `version` | Current site version |
+| `clear` | Clear the terminal |
+| `reload` | Reload the page |
+| `help` | Show all available commands |
 
-## How It Works?
+**Tips:**
+- Use `↑` / `↓` arrow keys to navigate command history
+- Press `Tab` to autocomplete a command
+- Mistyped a command? The terminal will suggest the closest match
 
-The web page accepts terminal-like commands from the user and provides specific information in response to these commands.
+---
 
-Sample Commands:
+## Tech Stack
 
-- `whoami`: Displays information about the user.
-- `whatsmyip`: Shows the user's current IP address with detail.
-- `version`: Displays the current version of the website.
-- `clear`: Clear of stdin, stdout and stderr on terminal.
-- `reload`: Reloads the web page.
-- `help`: Shows all avaliable commands.
-- ...
+- **Next.js 16** — App Router, static export
+- **React 19**
+- **xterm.js** — Terminal emulator
+- **Tailwind CSS 4**
+- **TypeScript**
+- **JetBrains Mono** — Terminal font (via `next/font/google`)
 
-## Installation
+---
 
-Clone this repository to your local machine
+## Local Development
 
 ```bash
 git clone https://github.com/gokhangunduz/gokhangunduz.dev.git
-```
-
-Install all dependencies
-
-```bash
+cd gokhangunduz.dev
 npm install
-```
-
-Start this project for development
-
-```bash
 npm run dev
 ```
 
-The application will be running at localhost:3000.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Contributing
+Set `NEXT_PUBLIC_IP_TOKEN` in a `.env.local` file (see `.env.example`) to enable the `whatsmyip` command.
 
-I welcome contributions of any kind. If you find a bug or have new features in mind, please submit a pull request.
+---
+
+## Deployment
+
+### GitHub Pages (automatic)
+
+Push to `main` — the included GitHub Actions workflow builds and deploys automatically.
+
+Required: add `NEXT_PUBLIC_IP_TOKEN` as a repository secret under **Settings → Secrets → Actions**.
+
+### Docker
+
+```bash
+docker build --build-arg NEXT_PUBLIC_IP_TOKEN=your_token -t gokhangunduz.dev .
+docker run -p 80:80 gokhangunduz.dev
+```

@@ -22,7 +22,8 @@ const me: IMeData = {
     "Selenium",
     "Three.JS",
     "Tailwind CSS",
-    "Boostrap",
+    "Bootstrap",
+    "Swift",
     "Linux",
     "Ubuntu",
     "Apache",
@@ -50,7 +51,7 @@ const me: IMeData = {
     },
     {
       company: "CERS Digital Agency",
-      title: "Frontend && WordPress Developer",
+      title: "Frontend & WordPress Developer",
       date: "May 2021 - Nov 2021",
     },
     {
@@ -113,6 +114,11 @@ const me: IMeData = {
       name: "Alpha VS Theme",
       url: "https://github.com/gokhangunduz/alpha-theme",
       live: "https://marketplace.visualstudio.com/items?itemName=gokhangunduz.alpha",
+    },
+    {
+      name: "Exif Lens",
+      url: "https://apps.apple.com/tr/app/exif-lens/id6760788024",
+      live: "https://apps.apple.com/tr/app/exif-lens/id6760788024",
     },
   ],
 
