@@ -7,5 +7,13 @@ import "@xterm/xterm/css/xterm.css";
 export default function Terminal(): ReactElement {
   const ref = useTerminal();
 
-  return <div ref={ref} className="terminal" />;
+  return (
+    <div
+      ref={ref}
+      className="terminal"
+      role="application"
+      tabIndex={0}
+      aria-label="Interactive terminal — type 'help' for available commands"
+    />
+  );
 }

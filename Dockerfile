@@ -1,10 +1,12 @@
 FROM node:alpine AS build-stage
 
 ARG NEXT_PUBLIC_IP_TOKEN
+ENV NODE_ENV=production
 
 WORKDIR /project
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
 FROM nginx:alpine AS production-stage

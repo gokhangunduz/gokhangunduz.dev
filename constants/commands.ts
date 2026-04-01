@@ -2,23 +2,42 @@ import me from "@/constants/me";
 import { ICommands } from "@/types/types";
 import { getIPInfo } from "@/apis/apis";
 import packageJSON from "@/package.json";
+import { findClosestCommand } from "@/utils/fuzzy";
+import { colorizeJSON } from "@/utils/colorize";
+
+const commandNames = [
+  "whoami",
+  "whatsmyip",
+  "skills",
+  "experience",
+  "education",
+  "projects",
+  "socials",
+  "contact",
+  "version",
+  "help",
+  "clear",
+  "reload",
+];
 
 const commands = {
   whoami: (term) => {
     try {
-      term.write(JSON.stringify(me, null, 2).replace(/\n/g, "\r\n") + "\r\n");
+      term.write(colorizeJSON(me).replace(/\n/g, "\r\n") + "\r\n");
     } catch {
       term.write("Could not display user information.\r\n");
     }
   },
 
   whatsmyip: async (term) => {
+    term.write("Fetching IP info...\r\n");
     try {
-      await getIPInfo().then((res) =>
-        term.write(
-          JSON.stringify(res, null, 2).replace(/\n/g, "\r\n") + "\r\n",
-        ),
-      );
+      const res = await getIPInfo();
+      if (res) {
+        term.write(colorizeJSON(res).replace(/\n/g, "\r\n") + "\r\n");
+      } else {
+        term.write("Could not fetch IP information.\r\n");
+      }
     } catch (e) {
       console.error(e);
       term.write("Could not fetch IP information.\r\n");
@@ -67,10 +86,10 @@ const commands = {
   },
 
   contact: (term) => {
-    term.write(`Email  : ${me.email}\r\n`);
-    term.write(`GitHub : ${me.socials.github}\r\n`);
+    term.write(`Email    : ${me.email}\r\n`);
+    term.write(`GitHub   : ${me.socials.github}\r\n`);
     term.write(`LinkedIn : ${me.socials.linkedin}\r\n`);
-    term.write(`Medium : ${me.socials.medium}\r\n`);
+    term.write(`Medium   : ${me.socials.medium}\r\n`);
   },
 
   version: (term) => {
@@ -78,9 +97,8 @@ const commands = {
   },
 
   help: (term) => {
-    const keys = Object.keys(commands).filter((key) => key !== "notFound");
-    term.write("Available commands;\r\n");
-    keys.forEach((key) => term.write(`- ${key}\r\n`));
+    term.write("Available commands:\r\n");
+    commandNames.forEach((key) => term.write(`  - ${key}\r\n`));
   },
 
   clear: (term) => {
@@ -94,6 +112,10 @@ const commands = {
 
   notFound: (term, command) => {
     term.write(`Command not found: ${command}\r\n`);
+    const suggestion = findClosestCommand(command ?? "", commandNames);
+    if (suggestion) {
+      term.write(`Did you mean: ${suggestion}?\r\n`);
+    }
   },
 } as const satisfies ICommands;
 
