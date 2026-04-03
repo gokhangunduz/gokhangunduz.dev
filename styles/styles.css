@@ -16,6 +16,7 @@
 
 .terminal {
   @apply w-dvw h-dvh px-3 py-1 overflow-hidden;
+  overscroll-behavior: none;
 }
 
 @media (max-width: 639px) {

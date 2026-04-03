@@ -5,8 +5,6 @@ import { config, prompt, welcomeMessage } from "@/configs/xterm";
 import commands from "@/constants/commands";
 import {
   MOBILE_BREAKPOINT,
-  TOUCH_SCROLL_DIVISOR,
-  TOUCH_MOMENTUM_DECAY,
   INPUT_BUFFER_MAX,
 } from "@/constants/terminal";
 
@@ -89,57 +87,28 @@ export const useTerminal = () => {
         term.focus();
 
         let touchStartY = 0;
-        let scrollRemainder = 0;
-        let lastVelocity = 0;
-        let momentumRafId: number | null = null;
 
         const handleClick = () => term.focus();
 
         const handleTouchStart = (e: TouchEvent) => {
           touchStartY = e.touches[0].clientY;
-          scrollRemainder = 0;
-          lastVelocity = 0;
-          if (momentumRafId !== null) {
-            cancelAnimationFrame(momentumRafId);
-            momentumRafId = null;
-          }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
           const delta = touchStartY - e.touches[0].clientY;
           touchStartY = e.touches[0].clientY;
-          lastVelocity = delta;
-          const raw = delta / TOUCH_SCROLL_DIVISOR + scrollRemainder;
-          const lines = Math.trunc(raw);
-          scrollRemainder = raw - lines;
-          if (lines !== 0) term.scrollLines(lines);
-        };
-
-        const handleTouchEnd = () => {
-          let velocity = lastVelocity;
-          const step = () => {
-            velocity *= TOUCH_MOMENTUM_DECAY;
-            if (Math.abs(velocity) < 0.5) { momentumRafId = null; return; }
-            const raw = velocity / TOUCH_SCROLL_DIVISOR + scrollRemainder;
-            const lines = Math.trunc(raw);
-            scrollRemainder = raw - lines;
-            if (lines !== 0) term.scrollLines(lines);
-            momentumRafId = requestAnimationFrame(step);
-          };
-          momentumRafId = requestAnimationFrame(step);
+          const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
+          if (viewport) viewport.scrollTop += delta;
         };
 
         el.addEventListener("click", handleClick);
         el.addEventListener("touchstart", handleTouchStart, { passive: true });
         el.addEventListener("touchmove", handleTouchMove, { passive: true });
-        el.addEventListener("touchend", handleTouchEnd, { passive: true });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
           el.removeEventListener("touchstart", handleTouchStart);
           el.removeEventListener("touchmove", handleTouchMove);
-          el.removeEventListener("touchend", handleTouchEnd);
-          if (momentumRafId !== null) cancelAnimationFrame(momentumRafId);
         };
       }
     };
