@@ -44,20 +44,3 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
-
-/* Transparan overlay — mobile'da touch scroll yakalar, desktop'ta görünmez */
-.touch-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  background: transparent;
-  pointer-events: none; /* desktop: mouse event'lere dokunma */
-  touch-action: none;   /* browser'ın default scroll'unu engelle */
-}
-
-@media (pointer: coarse) {
-  .touch-overlay {
-    pointer-events: auto; /* mobile/touch: event'leri yakala */
-  }
-}
-

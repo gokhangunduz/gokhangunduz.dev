@@ -10,7 +10,6 @@ import {
 
 export const useTerminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLElement | null>(null);
   const inputBuffer = useRef<string>("");
   const fitAddonRef = useRef<FitAddon | null>(null);
   const elCleanupRef = useRef<(() => void) | null>(null);
@@ -88,14 +87,32 @@ export const useTerminal = () => {
         term.open(el);
         fitAddon.fit();
         fitAddonRef.current = fitAddon;
-        viewportRef.current = el.querySelector(".xterm-viewport");
         term.focus();
 
+        let touchStartY = 0;
+
         const handleClick = () => term.focus();
+
+        const handleTouchStart = (e: TouchEvent) => {
+          touchStartY = e.touches[0].clientY;
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+          e.preventDefault();
+          const delta = touchStartY - e.touches[0].clientY;
+          touchStartY = e.touches[0].clientY;
+          const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
+          if (viewport) viewport.scrollTop += delta;
+        };
+
         el.addEventListener("click", handleClick);
+        el.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false, capture: true });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
+          el.removeEventListener("touchstart", handleTouchStart, { capture: true });
+          el.removeEventListener("touchmove", handleTouchMove, { capture: true });
         };
       }
     };
@@ -167,5 +184,5 @@ export const useTerminal = () => {
     };
   }, []);
 
-  return { terminalRef, viewportRef };
+  return terminalRef;
 };
