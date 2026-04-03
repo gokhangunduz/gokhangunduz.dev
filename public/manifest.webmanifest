@@ -1,0 +1,16 @@
+{
+  "name": "Gökhan Gündüz — Full Stack Developer",
+  "short_name": "gokhangunduz",
+  "description": "Interactive terminal portfolio of Gökhan Gündüz, Full Stack Developer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060b0f",
+  "theme_color": "#00e5ff",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
