@@ -18,6 +18,10 @@ const commandNames = [
   "help",
   "clear",
   "reload",
+  "echo",
+  "date",
+  "blog",
+  "github",
 ];
 
 const commands = {
@@ -108,6 +112,25 @@ const commands = {
   reload: (term) => {
     term.write("Reloading...\r\n");
     window.location.reload();
+  },
+
+  echo: (term, command) => {
+    const input = (command ?? "").replace(/^echo\s*/i, "").trim();
+    term.write(input + "\r\n");
+  },
+
+  date: (term) => {
+    term.write(new Date().toString() + "\r\n");
+  },
+
+  blog: (term) => {
+    term.write(`Opening ${me.socials.medium}...\r\n`);
+    window.open(me.socials.medium, "_blank");
+  },
+
+  github: (term) => {
+    term.write(`Opening ${me.socials.github}...\r\n`);
+    window.open(me.socials.github, "_blank");
   },
 
   notFound: (term, command) => {
