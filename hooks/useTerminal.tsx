@@ -95,6 +95,7 @@ export const useTerminal = () => {
         };
 
         const handleTouchMove = (e: TouchEvent) => {
+          e.preventDefault();
           const delta = touchStartY - e.touches[0].clientY;
           touchStartY = e.touches[0].clientY;
           const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
@@ -103,7 +104,7 @@ export const useTerminal = () => {
 
         el.addEventListener("click", handleClick);
         el.addEventListener("touchstart", handleTouchStart, { passive: true });
-        el.addEventListener("touchmove", handleTouchMove, { passive: true });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
