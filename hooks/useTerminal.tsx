@@ -121,9 +121,14 @@ export const useTerminal = () => {
 
     const handleRightClick = (e: MouseEvent) => e.preventDefault();
     const handleResize = () => fitAddonRef.current?.fit();
+    const handleViewportResize = () => {
+      fitAddonRef.current?.fit();
+      term.scrollToBottom();
+    };
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("contextmenu", handleRightClick);
+    window.visualViewport?.addEventListener("resize", handleViewportResize);
 
     term.onData(async (data) => {
       if (data === "\r") {
@@ -164,6 +169,7 @@ export const useTerminal = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("contextmenu", handleRightClick);
+      window.visualViewport?.removeEventListener("resize", handleViewportResize);
       elCleanupRef.current?.();
       term.dispose();
     };
