@@ -106,13 +106,13 @@ export const useTerminal = () => {
         };
 
         el.addEventListener("click", handleClick);
-        el.addEventListener("touchstart", handleTouchStart, { passive: true });
-        el.addEventListener("touchmove", handleTouchMove, { passive: false });
+        el.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false, capture: true });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
-          el.removeEventListener("touchstart", handleTouchStart);
-          el.removeEventListener("touchmove", handleTouchMove);
+          el.removeEventListener("touchstart", handleTouchStart, { capture: true });
+          el.removeEventListener("touchmove", handleTouchMove, { capture: true });
         };
       }
     };
