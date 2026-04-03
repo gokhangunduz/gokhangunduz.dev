@@ -6,28 +6,28 @@
  */
 export const palette = {
   // Backgrounds
-  bg: "#090f14",
-  bgDeep: "#050a0f",
-  bgSurface: "#0d2d40",
-  bgHighlight: "#1a2d40",
+  bg: "#060b0f",
+  bgDeep: "#03060a",
+  bgSurface: "#0a2535",
+  bgHighlight: "#152438",
 
   // Foregrounds
-  fg: "#b0e4ff",
-  fgSubtle: "#b0d4e4",
-  fgBright: "#e0f4ff",
+  fg: "#c8eeff",
+  fgSubtle: "#8ab8d4",
+  fgBright: "#f0faff",
 
   // Accent — cyan family
-  accent: "#7ae4ff",
-  accentBright: "#b0f0ff",
+  accent: "#00e5ff",
+  accentBright: "#80f4ff",
 
   // Blue family
-  blue: "#1a9aba",
-  blueBright: "#1ab8e0",
+  blue: "#00a8cc",
+  blueBright: "#00c8f0",
 
   // ANSI support
-  green: "#7ae4a0",
-  yellow: "#e4cc7a",
-  red: "#e05c7a",
+  green: "#00ff88",
+  yellow: "#ffe066",
+  red: "#ff4d6a",
 } as const;
 
 export type Palette = typeof palette;
