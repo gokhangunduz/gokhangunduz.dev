@@ -1,9 +1,15 @@
 import me from "@/constants/me";
+import { ANSI } from "@/constants/ansi";
+import {
+  MATRIX_DROP_DENSITY,
+  MATRIX_FRAME_DELAY_MS,
+  MATRIX_TOTAL_FRAMES,
+} from "@/constants/terminal";
 import { ICommands } from "@/types/types";
 import { getIPInfo } from "@/apis/apis";
 import packageJSON from "@/package.json";
 import { findClosestCommand } from "@/utils/fuzzy";
-import { colorizeJSON } from "@/utils/colorize";
+import { colorizeAndFormat } from "@/utils/colorize";
 
 const commandNames = [
   // identity
@@ -25,12 +31,16 @@ const commandNames = [
   "clear",
   "reload",
   "help",
+  "ls",
+  "sudo",
+  "matrix",
+  "history",
 ];
 
 const commands = {
   whoami: (term) => {
     try {
-      term.write(colorizeJSON(me).replace(/\n/g, "\r\n") + "\r\n");
+      term.write(colorizeAndFormat(me));
     } catch {
       term.write("Could not display user information.\r\n");
     }
@@ -41,7 +51,7 @@ const commands = {
     try {
       const res = await getIPInfo();
       if (res) {
-        term.write(colorizeJSON(res).replace(/\n/g, "\r\n") + "\r\n");
+        term.write(colorizeAndFormat(res));
       } else {
         term.write("Could not fetch IP information.\r\n");
       }
@@ -106,14 +116,70 @@ const commands = {
   help: (term) => {
     term.write("Available commands:\r\n");
     term.write("\r\n");
-    term.write("  \x1b[36mIdentity\x1b[0m\r\n");
+    term.write(`  ${ANSI.CYAN}Identity${ANSI.RESET}\r\n`);
     term.write("    whoami · skills · experience · education · projects\r\n");
     term.write("\r\n");
-    term.write("  \x1b[36mConnect\x1b[0m\r\n");
+    term.write(`  ${ANSI.CYAN}Connect${ANSI.RESET}\r\n`);
     term.write("    socials · contact · blog · github\r\n");
     term.write("\r\n");
-    term.write("  \x1b[36mUtilities\x1b[0m\r\n");
+    term.write(`  ${ANSI.CYAN}Utilities${ANSI.RESET}\r\n`);
     term.write("    whatsmyip · date · echo · version · clear · reload · help\r\n");
+    term.write("    ls · sudo · matrix · history\r\n");
+  },
+
+  ls: (term) => {
+    term.write("total 3\r\n");
+    term.write(`${ANSI.BLUE}identity/${ANSI.RESET}\r\n`);
+    term.write("  whoami  skills  experience  education  projects\r\n");
+    term.write(`${ANSI.BLUE}connect/${ANSI.RESET}\r\n`);
+    term.write("  socials  contact  blog  github\r\n");
+    term.write(`${ANSI.BLUE}utilities/${ANSI.RESET}\r\n`);
+    term.write("  whatsmyip  date  echo  version  clear  reload  help  ls  sudo  matrix  history\r\n");
+  },
+
+  sudo: (term, command) => {
+    const subcmd = (command ?? "").replace(/^sudo\s*/i, "").trim();
+    if (subcmd) {
+      term.write(`[sudo] password for ${me.firstName.toLowerCase()}: \r\n`);
+    }
+    term.write("Permission denied. Nice try.\r\n");
+  },
+
+  matrix: (term) => {
+    return new Promise<void>((resolve) => {
+      const cols = term.cols;
+      const rows = term.rows;
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*";
+      const dropCount = Math.floor(cols / MATRIX_DROP_DENSITY);
+      const drops: number[] = Array.from({ length: dropCount }, () =>
+        Math.floor(Math.random() * rows)
+      );
+      const randChar = () => chars[Math.floor(Math.random() * chars.length)];
+
+      term.write(`${ANSI.CURSOR_HIDE}${ANSI.CLEAR_SCREEN}`);
+
+      let frame = 0;
+
+      const interval = setInterval(() => {
+        drops.forEach((row, i) => {
+          const col = i * MATRIX_DROP_DENSITY + 1;
+          if (row > 1) {
+            term.write(`\x1b[${row};${col}H${ANSI.GREEN}${randChar()}`);
+          }
+          if (row <= rows) {
+            term.write(`\x1b[${row + 1};${col}H${ANSI.GREEN_BRIGHT}${randChar()}`);
+          }
+          drops[i] = row >= rows ? 1 : row + 1;
+        });
+
+        frame++;
+        if (frame >= MATRIX_TOTAL_FRAMES) {
+          clearInterval(interval);
+          term.write(`${ANSI.CURSOR_SHOW}${ANSI.CLEAR_SCREEN}${ANSI.CURSOR_HOME}${ANSI.RESET}`);
+          resolve();
+        }
+      }, MATRIX_FRAME_DELAY_MS);
+    });
   },
 
   clear: (term) => {
@@ -153,4 +219,5 @@ const commands = {
   },
 } as const satisfies ICommands;
 
+export { commandNames };
 export default commands;

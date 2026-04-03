@@ -35,3 +35,7 @@ function colorValue(value: unknown, depth: number): string {
 export function colorizeJSON(value: unknown): string {
   return colorValue(value, 0);
 }
+
+export function colorizeAndFormat(value: unknown): string {
+  return colorizeJSON(value).replace(/\n/g, "\r\n") + "\r\n";
+}

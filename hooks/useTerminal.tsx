@@ -123,7 +123,11 @@ export const useTerminal = () => {
     term.write(prompt);
 
     const handleRightClick = (e: MouseEvent) => e.preventDefault();
-    const handleResize = () => fitAddonRef.current?.fit();
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => fitAddonRef.current?.fit(), 100);
+    };
     const handleViewportResize = () => {
       const vp = window.visualViewport;
       if (vp && terminalRef.current) {
@@ -152,8 +156,22 @@ export const useTerminal = () => {
           }
           historyIndexRef.current = -1;
 
-          if (commands[command as keyof typeof commands]) {
-            await commands[command as keyof typeof commands](term, rawInput);
+          if (command === "history") {
+            const hist = historyRef.current;
+            if (hist.length === 0) {
+              term.write("No commands in history.\r\n");
+            } else {
+              hist.forEach((cmd, i) => {
+                term.write(`  ${String(i + 1).padStart(3)}  ${cmd}\r\n`);
+              });
+            }
+          } else if (commands[command as keyof typeof commands]) {
+            try {
+              await commands[command as keyof typeof commands](term, rawInput);
+            } catch (error) {
+              console.error(error);
+              term.write("An error occurred while executing the command.\r\n");
+            }
           } else {
             commands["notFound"](term, command);
           }
@@ -177,6 +195,7 @@ export const useTerminal = () => {
     });
 
     return () => {
+      clearTimeout(resizeTimer);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("contextmenu", handleRightClick);
       window.visualViewport?.removeEventListener("resize", handleViewportResize);

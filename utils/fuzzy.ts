@@ -1,3 +1,5 @@
+import { FUZZY_MATCH_THRESHOLD } from "@/constants/terminal";
+
 function levenshtein(a: string, b: string): number {
   const m = a.length;
   const n = b.length;
@@ -32,5 +34,5 @@ export function findClosestCommand(
     }
   }
 
-  return bestDist <= 3 ? best : null;
+  return bestDist <= FUZZY_MATCH_THRESHOLD ? best : null;
 }

@@ -9,8 +9,20 @@
   "icons": [
     {
       "src": "/favicon.ico",
-      "sizes": "any",
+      "sizes": "16x16 32x32 48x48",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/logo-dark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-light.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }
