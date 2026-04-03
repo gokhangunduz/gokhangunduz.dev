@@ -28,7 +28,8 @@ body {
 }
 
 .terminal {
-  @apply w-dvw h-dvh px-3 py-1 overflow-hidden;
+  @apply w-dvw px-3 py-1 overflow-hidden;
+  height: 100dvh;
   overscroll-behavior: none;
 }
 

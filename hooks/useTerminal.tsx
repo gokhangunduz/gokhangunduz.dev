@@ -81,6 +81,9 @@ export const useTerminal = () => {
 
       const el = terminalRef.current;
       if (el) {
+        if (window.visualViewport) {
+          el.style.height = `${window.visualViewport.height}px`;
+        }
         term.open(el);
         fitAddon.fit();
         fitAddonRef.current = fitAddon;
@@ -122,8 +125,14 @@ export const useTerminal = () => {
     const handleRightClick = (e: MouseEvent) => e.preventDefault();
     const handleResize = () => fitAddonRef.current?.fit();
     const handleViewportResize = () => {
-      fitAddonRef.current?.fit();
-      term.scrollToBottom();
+      const vp = window.visualViewport;
+      if (vp && terminalRef.current) {
+        terminalRef.current.style.height = `${vp.height}px`;
+      }
+      requestAnimationFrame(() => {
+        fitAddonRef.current?.fit();
+        term.scrollToBottom();
+      });
     };
 
     window.addEventListener("resize", handleResize);
