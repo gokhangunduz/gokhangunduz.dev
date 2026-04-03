@@ -45,13 +45,19 @@ body {
   -webkit-user-select: none;
 }
 
-/* Mobile (touch): viewport native scroll için canvas'ın üstüne çıktı.
-   Canvas'ta pointer-events kapatılıyor, touch event'ler viewport'a ulaşıyor. */
+/* Transparan overlay — mobile'da touch scroll yakalar, desktop'ta görünmez */
+.touch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: transparent;
+  pointer-events: none; /* desktop: mouse event'lere dokunma */
+  touch-action: none;   /* browser'ın default scroll'unu engelle */
+}
+
 @media (pointer: coarse) {
-  .xterm-screen {
-    pointer-events: none;
-  }
-  .xterm-viewport {
-    touch-action: pan-y;
+  .touch-overlay {
+    pointer-events: auto; /* mobile/touch: event'leri yakala */
   }
 }
+

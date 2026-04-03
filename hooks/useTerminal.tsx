@@ -10,6 +10,7 @@ import {
 
 export const useTerminal = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLElement | null>(null);
   const inputBuffer = useRef<string>("");
   const fitAddonRef = useRef<FitAddon | null>(null);
   const elCleanupRef = useRef<(() => void) | null>(null);
@@ -87,18 +88,8 @@ export const useTerminal = () => {
         term.open(el);
         fitAddon.fit();
         fitAddonRef.current = fitAddon;
+        viewportRef.current = el.querySelector(".xterm-viewport");
         term.focus();
-
-        // Viewport'u canvas'ın üstüne al, saydam yap.
-        // Mobile'da (pointer: coarse) browser viewport üzerinde native scroll yapar.
-        // CSS'teki @media (pointer: coarse) kuralı canvas'ı pointer-events: none yapar,
-        // böylece touch event'ler viewport'a ulaşır.
-        const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
-        if (viewport) {
-          viewport.style.backgroundColor = "transparent";
-          viewport.style.zIndex = "5";
-          viewport.style.overscrollBehavior = "contain";
-        }
 
         const handleClick = () => term.focus();
         el.addEventListener("click", handleClick);
@@ -176,5 +167,5 @@ export const useTerminal = () => {
     };
   }, []);
 
-  return terminalRef;
+  return { terminalRef, viewportRef };
 };
