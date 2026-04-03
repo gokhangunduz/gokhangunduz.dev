@@ -8,6 +8,8 @@ An interactive terminal-style portfolio and resume website. Built with Next.js a
 
 ## Commands
 
+### Identity
+
 | Command | Description |
 |---|---|
 | `whoami` | Full profile as JSON |
@@ -15,9 +17,23 @@ An interactive terminal-style portfolio and resume website. Built with Next.js a
 | `experience` | Work history |
 | `education` | Education background |
 | `projects` | Projects with links |
-| `socials` | Social media links |
+
+### Connect
+
+| Command | Description |
+|---|---|
+| `socials` | All social media links |
 | `contact` | Contact information |
+| `blog` | Open Medium blog |
+| `github` | Open GitHub profile |
+
+### Utilities
+
+| Command | Description |
+|---|---|
 | `whatsmyip` | Your current IP address and location |
+| `date` | Current date and time |
+| `echo <text>` | Print text to the terminal |
 | `version` | Current site version |
 | `clear` | Clear the terminal |
 | `reload` | Reload the page |
@@ -34,7 +50,7 @@ An interactive terminal-style portfolio and resume website. Built with Next.js a
 
 - **Next.js 16** — App Router, static export
 - **React 19**
-- **xterm.js** — Terminal emulator
+- **xterm.js 6** — Terminal emulator in the browser
 - **Tailwind CSS 4**
 - **TypeScript**
 - **JetBrains Mono** — Terminal font (via `next/font/google`)
@@ -63,10 +79,3 @@ Set `NEXT_PUBLIC_IP_TOKEN` in a `.env.local` file (see `.env.example`) to enable
 Push to `main` — the included GitHub Actions workflow builds and deploys automatically.
 
 Required: add `NEXT_PUBLIC_IP_TOKEN` as a repository secret under **Settings → Secrets → Actions**.
-
-### Docker
-
-```bash
-docker build --build-arg NEXT_PUBLIC_IP_TOKEN=your_token -t gokhangunduz.dev .
-docker run -p 80:80 gokhangunduz.dev
-```

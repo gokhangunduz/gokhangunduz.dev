@@ -142,17 +142,18 @@ export const useTerminal = () => {
     term.onData(async (data) => {
       if (data === "\r") {
         term.write("\r\n");
-        const command = inputBuffer.current.trim().toLowerCase();
+        const rawInput = inputBuffer.current.trim();
+        const command = rawInput.toLowerCase().split(/\s+/)[0];
 
         if (command.length) {
           const history = historyRef.current;
-          if (history[history.length - 1] !== command) {
-            historyRef.current = [...history, command];
+          if (history[history.length - 1] !== rawInput) {
+            historyRef.current = [...history, rawInput];
           }
           historyIndexRef.current = -1;
 
           if (commands[command as keyof typeof commands]) {
-            await commands[command as keyof typeof commands](term, command);
+            await commands[command as keyof typeof commands](term, rawInput);
           } else {
             commands["notFound"](term, command);
           }
