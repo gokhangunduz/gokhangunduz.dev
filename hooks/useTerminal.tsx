@@ -90,6 +90,9 @@ export const useTerminal = () => {
         term.focus();
 
         let touchStartY = 0;
+        const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
+        const canvas = el.querySelector("canvas") as HTMLElement | null;
+        const touchTarget = canvas ?? el;
 
         const handleClick = () => term.focus();
 
@@ -101,18 +104,17 @@ export const useTerminal = () => {
           e.preventDefault();
           const delta = touchStartY - e.touches[0].clientY;
           touchStartY = e.touches[0].clientY;
-          const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
           if (viewport) viewport.scrollTop += delta;
         };
 
         el.addEventListener("click", handleClick);
-        el.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
-        el.addEventListener("touchmove", handleTouchMove, { passive: false, capture: true });
+        touchTarget.addEventListener("touchstart", handleTouchStart, { passive: false });
+        touchTarget.addEventListener("touchmove", handleTouchMove, { passive: false });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
-          el.removeEventListener("touchstart", handleTouchStart, { capture: true });
-          el.removeEventListener("touchmove", handleTouchMove, { capture: true });
+          touchTarget.removeEventListener("touchstart", handleTouchStart);
+          touchTarget.removeEventListener("touchmove", handleTouchMove);
         };
       }
     };
