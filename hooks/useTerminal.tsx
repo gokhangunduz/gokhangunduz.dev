@@ -89,32 +89,22 @@ export const useTerminal = () => {
         fitAddonRef.current = fitAddon;
         term.focus();
 
-        let touchStartY = 0;
+        // Viewport'u canvas'ın üstüne al, saydam yap.
+        // Mobile'da (pointer: coarse) browser viewport üzerinde native scroll yapar.
+        // CSS'teki @media (pointer: coarse) kuralı canvas'ı pointer-events: none yapar,
+        // böylece touch event'ler viewport'a ulaşır.
         const viewport = el.querySelector(".xterm-viewport") as HTMLElement | null;
-        const canvas = el.querySelector("canvas") as HTMLElement | null;
-        const touchTarget = canvas ?? el;
+        if (viewport) {
+          viewport.style.backgroundColor = "transparent";
+          viewport.style.zIndex = "5";
+          viewport.style.overscrollBehavior = "contain";
+        }
 
         const handleClick = () => term.focus();
-
-        const handleTouchStart = (e: TouchEvent) => {
-          touchStartY = e.touches[0].clientY;
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-          e.preventDefault();
-          const delta = touchStartY - e.touches[0].clientY;
-          touchStartY = e.touches[0].clientY;
-          if (viewport) viewport.scrollTop += delta;
-        };
-
         el.addEventListener("click", handleClick);
-        touchTarget.addEventListener("touchstart", handleTouchStart, { passive: false });
-        touchTarget.addEventListener("touchmove", handleTouchMove, { passive: false });
 
         elCleanupRef.current = () => {
           el.removeEventListener("click", handleClick);
-          touchTarget.removeEventListener("touchstart", handleTouchStart);
-          touchTarget.removeEventListener("touchmove", handleTouchMove);
         };
       }
     };

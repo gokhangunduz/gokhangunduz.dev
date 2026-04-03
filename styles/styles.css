@@ -44,3 +44,14 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
+
+/* Mobile (touch): viewport native scroll için canvas'ın üstüne çıktı.
+   Canvas'ta pointer-events kapatılıyor, touch event'ler viewport'a ulaşıyor. */
+@media (pointer: coarse) {
+  .xterm-screen {
+    pointer-events: none;
+  }
+  .xterm-viewport {
+    touch-action: pan-y;
+  }
+}
