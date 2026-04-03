@@ -46,11 +46,6 @@ export const metadata: Metadata = {
     canonical: url,
   },
   manifest: "/manifest.webmanifest",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
   openGraph: {
     title,
     description,

@@ -6,22 +6,25 @@ import { findClosestCommand } from "@/utils/fuzzy";
 import { colorizeJSON } from "@/utils/colorize";
 
 const commandNames = [
+  // identity
   "whoami",
-  "whatsmyip",
   "skills",
   "experience",
   "education",
   "projects",
+  // connect
   "socials",
   "contact",
-  "version",
-  "help",
-  "clear",
-  "reload",
-  "echo",
-  "date",
   "blog",
   "github",
+  // utilities
+  "whatsmyip",
+  "date",
+  "echo",
+  "version",
+  "clear",
+  "reload",
+  "help",
 ];
 
 const commands = {
@@ -102,7 +105,15 @@ const commands = {
 
   help: (term) => {
     term.write("Available commands:\r\n");
-    commandNames.forEach((key) => term.write(`  - ${key}\r\n`));
+    term.write("\r\n");
+    term.write("  \x1b[36mIdentity\x1b[0m\r\n");
+    term.write("    whoami · skills · experience · education · projects\r\n");
+    term.write("\r\n");
+    term.write("  \x1b[36mConnect\x1b[0m\r\n");
+    term.write("    socials · contact · blog · github\r\n");
+    term.write("\r\n");
+    term.write("  \x1b[36mUtilities\x1b[0m\r\n");
+    term.write("    whatsmyip · date · echo · version · clear · reload · help\r\n");
   },
 
   clear: (term) => {
