@@ -290,7 +290,7 @@ const commands = {
         const mr = r - pad;
         const mc = c - pad;
         if (mr < 0 || mr >= size || mc < 0 || mc >= size) return false;
-        return modules.get(mr, mc);
+        return !!modules.get(mr, mc);
       };
 
       term.write(`GitHub: ${url}\r\n\r\n`);
