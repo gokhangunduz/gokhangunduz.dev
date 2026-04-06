@@ -12,7 +12,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#00e5ff",
+  themeColor: "#22d3ee",
 };
 
 const title = "Gökhan Gündüz — Full Stack Developer";

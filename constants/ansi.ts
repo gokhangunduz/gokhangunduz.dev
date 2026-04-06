@@ -4,6 +4,8 @@ export const ANSI = {
   BLUE: "\x1b[34m",
   GREEN: "\x1b[32m",
   GREEN_BRIGHT: "\x1b[92m",
+  YELLOW: "\x1b[33m",
+  BRIGHT_CYAN: "\x1b[96m",
   CURSOR_HIDE: "\x1b[?25l",
   CURSOR_SHOW: "\x1b[?25h",
   CLEAR_SCREEN: "\x1b[2J",

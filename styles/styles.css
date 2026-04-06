@@ -2,8 +2,8 @@
 
 /* Theme palette — keep in sync with constants/palette.ts */
 :root {
-  --bg: #060b0f;
-  --accent: #00e5ff;
+  --bg: #070c11;
+  --accent: #22d3ee;
 }
 
 ::-webkit-scrollbar {

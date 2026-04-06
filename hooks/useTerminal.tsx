@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Terminal as Xterm } from "@xterm/xterm";
 import type { FitAddon } from "@xterm/addon-fit";
 import { config, prompt, welcomeMessage } from "@/configs/xterm";
-import commands from "@/constants/commands";
+import commands, { createHistoryCommand } from "@/constants/commands";
 import {
   MOBILE_BREAKPOINT,
   INPUT_BUFFER_MAX,
@@ -20,6 +20,7 @@ export const useTerminal = () => {
     const fontSize = window.innerWidth < MOBILE_BREAKPOINT ? 12 : 14;
     const term = new Xterm({ ...config, fontSize });
     const commandKeys = Object.keys(commands).filter((k) => k !== "notFound");
+    const historyCommand = createHistoryCommand(() => historyRef.current);
 
     term.attachCustomKeyEventHandler((event) => {
       if (event.type !== "keydown") return true;
@@ -157,14 +158,7 @@ export const useTerminal = () => {
           historyIndexRef.current = -1;
 
           if (command === "history") {
-            const hist = historyRef.current;
-            if (hist.length === 0) {
-              term.write("No commands in history.\r\n");
-            } else {
-              hist.forEach((cmd, i) => {
-                term.write(`  ${String(i + 1).padStart(3)}  ${cmd}\r\n`);
-              });
-            }
+            historyCommand(term);
           } else if (commands[command as keyof typeof commands]) {
             try {
               await commands[command as keyof typeof commands](term, rawInput);
