@@ -13,7 +13,7 @@ export default function Terminal(): ReactElement {
       className="terminal"
       role="application"
       tabIndex={0}
-      aria-label="Interactive terminal — type 'help' for available commands"
+      aria-label="Gökhan Gündüz — Interactive terminal portfolio. Type 'help' for available commands."
     />
   );
 }
