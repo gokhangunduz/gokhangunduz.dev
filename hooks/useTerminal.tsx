@@ -15,6 +15,7 @@ export const useTerminal = () => {
   const elCleanupRef = useRef<(() => void) | null>(null);
   const historyRef = useRef<string[]>([]);
   const historyIndexRef = useRef<number>(-1);
+  const cursorPosRef = useRef<number>(0);
 
   useEffect(() => {
     const fontSize = window.innerWidth < MOBILE_BREAKPOINT ? 12 : 14;
@@ -25,7 +26,36 @@ export const useTerminal = () => {
     term.attachCustomKeyEventHandler((event) => {
       if (event.type !== "keydown") return true;
 
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      if (event.key === "ArrowLeft") {
+        if (cursorPosRef.current > 0) {
+          cursorPosRef.current--;
+          term.write("\x1b[D");
+        }
+        return false;
+      }
+
+      if (event.key === "ArrowRight") {
+        if (cursorPosRef.current < inputBuffer.current.length) {
+          cursorPosRef.current++;
+          term.write("\x1b[C");
+        }
+        return false;
+      }
+
+      if (event.key === "Home") {
+        if (cursorPosRef.current > 0) {
+          term.write(`\x1b[${cursorPosRef.current}D`);
+          cursorPosRef.current = 0;
+        }
+        return false;
+      }
+
+      if (event.key === "End") {
+        const remaining = inputBuffer.current.length - cursorPosRef.current;
+        if (remaining > 0) {
+          term.write(`\x1b[${remaining}C`);
+          cursorPosRef.current = inputBuffer.current.length;
+        }
         return false;
       }
 
@@ -35,6 +65,7 @@ export const useTerminal = () => {
         if (matches.length === 1) {
           term.write(`\r\x1b[K${prompt}${matches[0]}`);
           inputBuffer.current = matches[0];
+          cursorPosRef.current = matches[0].length;
         } else if (matches.length > 1) {
           term.write(`\r\n${matches.join("  ")}\r\n${prompt}${current}`);
         }
@@ -52,6 +83,7 @@ export const useTerminal = () => {
         const cmd = history[history.length - 1 - newIndex];
         term.write(`\r\x1b[K${prompt}${cmd}`);
         inputBuffer.current = cmd;
+        cursorPosRef.current = cmd.length;
         return false;
       }
 
@@ -60,11 +92,13 @@ export const useTerminal = () => {
         if (historyIndexRef.current === -1) {
           term.write(`\r\x1b[K${prompt}`);
           inputBuffer.current = "";
+          cursorPosRef.current = 0;
         } else {
           const history = historyRef.current;
           const cmd = history[history.length - 1 - historyIndexRef.current];
           term.write(`\r\x1b[K${prompt}${cmd}`);
           inputBuffer.current = cmd;
+          cursorPosRef.current = cmd.length;
         }
         return false;
       }
@@ -174,15 +208,28 @@ export const useTerminal = () => {
         }
 
         inputBuffer.current = "";
+        cursorPosRef.current = 0;
         term.write(prompt);
       } else if (data === "\x7F") {
-        if (inputBuffer.current.length > 0) {
-          inputBuffer.current = inputBuffer.current.slice(0, -1);
-          term.write("\b \b");
+        const pos = cursorPosRef.current;
+        if (pos > 0) {
+          const suffix = inputBuffer.current.slice(pos);
+          inputBuffer.current =
+            inputBuffer.current.slice(0, pos - 1) + suffix;
+          cursorPosRef.current--;
+          term.write(`\b${suffix} \x1b[${suffix.length + 1}D`);
         }
       } else if (inputBuffer.current.length < INPUT_BUFFER_MAX) {
-        inputBuffer.current += data;
-        term.write(data);
+        const pos = cursorPosRef.current;
+        const suffix = inputBuffer.current.slice(pos);
+        inputBuffer.current =
+          inputBuffer.current.slice(0, pos) + data + suffix;
+        cursorPosRef.current++;
+        if (suffix.length > 0) {
+          term.write(data + suffix + `\x1b[${suffix.length}D`);
+        } else {
+          term.write(data);
+        }
       } else {
         term.write("\x07");
       }
